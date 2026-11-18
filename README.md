@@ -1,9 +1,12 @@
-# Class-adaptive propensity-score screening
+# Class-Adaptive Propensity-Score Screening
 
-Code for the experiments described in **“Class-Adaptive
-Training-Data Screening Using Propensity-Score Distributions in Pretrained
-Representation Spaces.”** It starts from fixed CLIP or DINOv2 feature files and
-runs the following statistical analyses:
+This repository contains the code for **“Class-Adaptive Training-Data Screening
+Using Propensity-Score Distributions in Pretrained Representation Spaces.”** The
+pipeline starts from fixed CLIP or DINOv2 features and estimates how compatible
+each observation is with its recorded class. It then applies class-specific
+lower-tail screening rules and evaluates the filtered training sets.
+
+The implementation includes:
 
 - one-versus-rest assigned-class propensity scores;
 - in-sample and five-fold cross-fitted score estimation;
@@ -15,10 +18,10 @@ runs the following statistical analyses:
 - Beta/logit-normal distribution diagnostics;
 - known-label-disagreement evaluation for CIFAR-10N and CIFAR-100N.
 
-Raw images and large embedding matrices are intentionally excluded from Git.
-See `data/README.md` for expected inputs and official dataset sources.
+Raw images and large feature matrices are not stored in the repository. See
+[`data/README.md`](data/README.md) for the expected inputs and dataset sources.
 
-## Installation
+## Quick start
 
 ```bash
 git clone https://github.com/YifanHsu83/Class-adaptive-screening.git
@@ -31,10 +34,8 @@ python -m pip install -e ".[dev]"
 pytest
 ```
 
-Python 3.11 or later is required. The package records the experiment settings and
-package versions in every output directory. Matching the paper also requires the
-same prepared features, labels, splits, and dependency versions; running this
-package alone does not establish numerical agreement with the manuscript.
+Python 3.11 or later is required. Every run writes its configuration and package
+versions to `run_manifest.json`.
 
 ### Windows PowerShell
 
@@ -49,8 +50,9 @@ python -m venv .venv
 .\.venv\Scripts\cas-screen.exe extended --config data/prepared/demo/datasets.json --datasets demo --seeds 2 --output outputs/demo
 ```
 
-The synthetic demo needs no downloaded dataset. It checks the pipeline, not the
-paper's findings. Results are saved in `outputs/demo/extended_summary.csv`.
+The synthetic demo requires no external data. It verifies the installation and
+pipeline; it is not intended to reproduce the paper's empirical results. Results
+are written to `outputs/demo/extended_summary.csv`.
 
 For publishing this repository, see [GitHub upload instructions](GITHUB_UPLOAD.md).
 
@@ -72,7 +74,7 @@ placeholder paths. Paths may be absolute or relative to the configuration file.
 The local `configs/datasets.json` is ignored by Git. Keep shareable examples in
 `configs/datasets.example.json`.
 
-## Reproduce the manuscript analyses
+## Run the manuscript analyses
 
 ```bash
 # Primary 55-class Tiny ImageNet experiment, including in-sample analysis,
@@ -92,11 +94,11 @@ cas-screen known-noise --config configs/datasets.json \
   --output outputs/known_noise
 ```
 
-For a shorter run, add `--seeds 2` to any command. The primary analysis still runs
-distribution bootstraps and the sensitivity grid, so it may take time. The
-configured manuscript settings use
-50 seeds (`1` through `50`), `gamma=0.20`, five propensity folds, 100 trees, and
-maximum tree depth 8. These defaults are stored in `configs/experiment.json`.
+For a quick check, add `--seeds 2` to any command. The primary command also runs
+the goodness-of-fit bootstrap and sensitivity grid, so it is the most expensive
+workflow. The manuscript settings use 50 seeds (`1` through `50`), `gamma=0.20`,
+five propensity folds, 100 trees, and a maximum tree depth of 8. All defaults are
+stored in [`configs/experiment.json`](configs/experiment.json).
 
 ## Outputs
 
@@ -124,7 +126,7 @@ include:
 7. Scores equal to the cutoff are removed. Tied empirical scores can therefore
    produce retention rates different from exactly `1 - gamma`.
 
-## Code map
+## Repository layout
 
 - `data.py`: read prepared features and align CSV feature columns.
 - `propensity.py`: fit one-versus-rest logistic models and obtain assigned-class scores.
@@ -134,8 +136,9 @@ include:
 - `experiments.py`: assemble analyses and save results.
 - `cli.py`: expose the three experiment commands.
 
-Run `python -m pytest` after changes. The tests check cross-fitting against a
-reference implementation, retention counts, input alignment, and seed overrides.
+Run `python -m pytest` after making changes. The test suite checks cross-fitting
+against a reference implementation, retention counts, input alignment, and
+command-line overrides.
 
 The random-seed paired tests measure stability with respect to model
 randomization; they are not a substitute for uncertainty across independently

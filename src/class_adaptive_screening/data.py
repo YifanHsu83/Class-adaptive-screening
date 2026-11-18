@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -27,7 +28,7 @@ def _csv_arrays(
     label: str,
     clean: str | None = None,
     expected_features: list[str] | None = None,
-):
+) -> tuple[np.ndarray, np.ndarray, np.ndarray | None, list[str]]:
     frame = pd.read_csv(path)
     features = [column for column in frame.columns if column.startswith(feature_prefix)]
     if not features:
@@ -47,7 +48,7 @@ def _csv_arrays(
     return X, y, clean_y, features
 
 
-def load_dataset(spec: dict, base: Path) -> DatasetBundle:
+def load_dataset(spec: dict[str, Any], base: Path) -> DatasetBundle:
     """Load frozen features, keeping evaluation columns in training order."""
     train_path = _resolve(spec["train"], base)
     evaluation_path = _resolve(spec["evaluation"], base)

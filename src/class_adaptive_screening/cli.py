@@ -16,14 +16,27 @@ def positive_integer(value: str) -> int:
     return count
 
 
-def parser() -> argparse.ArgumentParser:
-    argument_parser = argparse.ArgumentParser(description="Class-adaptive screening experiments")
+def build_parser() -> argparse.ArgumentParser:
+    """Build the command-line interface."""
+    argument_parser = argparse.ArgumentParser(
+        description="Run class-adaptive propensity-score screening experiments."
+    )
     subparsers = argument_parser.add_subparsers(dest="command", required=True)
     for name in ("primary", "extended", "known-noise"):
         item = subparsers.add_parser(name)
-        item.add_argument("--config", required=True, help="Dataset JSON configuration")
-        item.add_argument("--experiment", default="configs/experiment.json")
-        item.add_argument("--output", required=True)
+        item.add_argument(
+            "--config",
+            type=Path,
+            required=True,
+            help="JSON file describing the prepared datasets",
+        )
+        item.add_argument(
+            "--experiment",
+            type=Path,
+            default=Path("configs/experiment.json"),
+            help="JSON file containing experiment settings",
+        )
+        item.add_argument("--output", type=Path, required=True, help="Directory for results")
         item.add_argument(
             "--seeds",
             type=positive_integer,
@@ -38,7 +51,7 @@ def parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> None:
-    args = parser().parse_args(argv)
+    args = build_parser().parse_args(argv)
     config = ExperimentConfig.from_json(args.experiment)
     # Keep the executed settings and the saved manifest in agreement.
     if args.seeds is not None:
@@ -49,7 +62,7 @@ def main(argv: list[str] | None = None) -> None:
     if missing:
         raise KeyError(f"Datasets absent from configuration: {missing}")
     bundles = {name: load_dataset(specifications[name], base) for name in names}
-    output = Path(args.output)
+    output = args.output
     if args.command == "primary":
         primary(bundles[names[0]], config, output)
     elif args.command == "extended":

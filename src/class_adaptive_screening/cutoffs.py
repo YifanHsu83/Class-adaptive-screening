@@ -1,20 +1,23 @@
 from __future__ import annotations
 
+from typing import Literal
+
 import numpy as np
 from scipy.special import expit, logit
 from scipy.stats import beta, norm
 
 METHODS = ("fixed", "cantelli", "beta", "logit_normal", "empirical")
+CutoffMethod = Literal["fixed", "cantelli", "beta", "logit_normal", "empirical"]
 
 
 def class_cutoffs(
     scores: np.ndarray,
     labels: np.ndarray,
-    method: str,
+    method: CutoffMethod,
     gamma: float = 0.20,
     fixed_cutoff: float = 0.30,
     epsilon: float = 1e-6,
-) -> dict:
+) -> dict[int, float]:
     """Estimate a lower-tail threshold separately for each recorded class.
 
     Beta and logit-normal fits clip probabilities away from zero and one.
@@ -22,7 +25,10 @@ def class_cutoffs(
     """
     if not 0 < gamma < 1:
         raise ValueError("gamma must lie strictly between zero and one")
-    result = {}
+    if not 0 < epsilon < 0.5:
+        raise ValueError("epsilon must lie strictly between 0 and 0.5")
+
+    cutoffs: dict[int, float] = {}
     for label in np.unique(labels):
         values = np.asarray(scores[labels == label], dtype=float)
         clipped = np.clip(values, epsilon, 1 - epsilon)
@@ -41,8 +47,8 @@ def class_cutoffs(
             cutoff = np.quantile(values, gamma)
         else:
             raise ValueError(f"Unknown cutoff method: {method}")
-        result[label] = float(cutoff)
-    return result
+        cutoffs[int(label)] = float(cutoff)
+    return cutoffs
 
 
 def global_empirical_cutoff(scores: np.ndarray, gamma: float = 0.20) -> float:

@@ -74,7 +74,7 @@ def test_seed_override_reaches_experiment_and_manifest(tmp_path, monkeypatch, co
 
 def test_zero_seeds_is_rejected():
     with pytest.raises(SystemExit):
-        cli.parser().parse_args(
+        cli.build_parser().parse_args(
             [
                 "primary",
                 "--config",
