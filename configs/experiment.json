@@ -1,0 +1,14 @@
+{
+  "gamma": 0.20,
+  "fixed_cutoff": 0.30,
+  "epsilon": 1e-6,
+  "gof_bootstrap_replicates": 1000,
+  "propensity_folds": 5,
+  "crossfit_seed": 2026,
+  "propensity_max_iter": 1000,
+  "rf_trees": 100,
+  "rf_max_depth": 8,
+  "seeds": 50,
+  "seed_start": 1,
+  "sensitivity_gammas": [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50]
+}

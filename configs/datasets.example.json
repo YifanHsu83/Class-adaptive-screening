@@ -1,0 +1,62 @@
+{
+  "tiny55_clip": {
+    "train": "../data/prepared/tiny55_clip_train.csv",
+    "evaluation": "../data/prepared/tiny55_clip_validation.csv",
+    "format": "csv",
+    "feature_prefix": "clip_",
+    "train_label": "class_index",
+    "evaluation_label": "class_index"
+  },
+  "tiny200_clip": {
+    "train": "../data/prepared/tiny200_clip_train.csv",
+    "evaluation": "../data/prepared/tiny200_clip_validation.csv",
+    "format": "csv",
+    "feature_prefix": "clip_",
+    "train_label": "class_index",
+    "evaluation_label": "class_index"
+  },
+  "tiny200_dinov2": {
+    "train": "../data/prepared/tiny200_dinov2_train.csv",
+    "evaluation": "../data/prepared/tiny200_dinov2_validation.csv",
+    "format": "csv",
+    "feature_prefix": "dinov2_",
+    "train_label": "class_index",
+    "evaluation_label": "class_index"
+  },
+  "cifar10n_clip": {
+    "train": "../data/prepared/cifar10n_clip_train.csv",
+    "evaluation": "../data/prepared/cifar10n_clip_validation.csv",
+    "format": "csv",
+    "feature_prefix": "clip_",
+    "train_label": "noisy_label",
+    "evaluation_label": "clean_label",
+    "clean_train_label": "clean_label"
+  },
+  "cifar10n_dinov2": {
+    "train": "../data/prepared/cifar10n_dinov2_train.csv",
+    "evaluation": "../data/prepared/cifar10n_dinov2_validation.csv",
+    "format": "csv",
+    "feature_prefix": "dinov2_",
+    "train_label": "noisy_label",
+    "evaluation_label": "clean_label",
+    "clean_train_label": "clean_label"
+  },
+  "cifar100n_clip": {
+    "train": "../data/prepared/cifar100n_clip_train.csv",
+    "evaluation": "../data/prepared/cifar100n_clip_test.csv",
+    "format": "csv",
+    "feature_prefix": "clip_",
+    "train_label": "noisy_fine_label",
+    "evaluation_label": "clean_fine_label",
+    "clean_train_label": "clean_fine_label"
+  },
+  "cifar100n_dinov2": {
+    "train": "../data/prepared/cifar100n_dinov2_train.csv",
+    "evaluation": "../data/prepared/cifar100n_dinov2_test.csv",
+    "format": "csv",
+    "feature_prefix": "dinov2_",
+    "train_label": "noisy_fine_label",
+    "evaluation_label": "clean_fine_label",
+    "clean_train_label": "clean_fine_label"
+  }
+}

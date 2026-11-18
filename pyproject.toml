@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "class-adaptive-screening"
+version = "1.0.0"
+description = "Reproducible experiments for class-adaptive training-data screening using assigned-class propensity-score distributions."
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+  {name = "Yi-fan Hsu"},
+  {name = "Chih-Fan Hsu"}
+]
+dependencies = [
+  "matplotlib>=3.8,<4",
+  "numpy>=1.26,<3",
+  "pandas>=2.1,<3",
+  "scikit-learn>=1.4,<2",
+  "scipy>=1.11,<2",
+  "statsmodels>=0.14,<1"
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<9", "ruff>=0.6,<1"]
+
+[project.scripts]
+cas-screen = "class_adaptive_screening.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
